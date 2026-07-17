@@ -1,0 +1,378 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vault Risk Passport — Concept Mockup</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ground:#0B0E1A;
+    --panel:#11162A;
+    --panel-2:#161D38;
+    --line:#232B4A;
+    --ink:#E8ECF8;
+    --slate:#8A93B2;
+    --blue:#2470FF;
+    --blue-soft:rgba(36,112,255,.14);
+    --ok:#3DD68C;
+    --warn:#F5A524;
+    --alert:#F14C58;
+    --radius:10px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    background:var(--ground);
+    color:var(--ink);
+    font-family:'Space Grotesk',system-ui,sans-serif;
+    font-size:15px;
+    line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+    padding:40px 20px 24px;
+  }
+  .mono{font-family:'IBM Plex Mono',monospace}
+  .wrap{max-width:1060px;margin:0 auto}
+
+  /* ---------- header ---------- */
+  .eyebrow{
+    display:flex;align-items:center;gap:12px;
+    color:var(--slate);font-size:12px;letter-spacing:.18em;text-transform:uppercase;
+    margin-bottom:18px;
+  }
+  .eyebrow .dot{width:7px;height:7px;border-radius:50%;background:var(--blue);box-shadow:0 0 12px var(--blue)}
+  .eyebrow .tag{
+    margin-left:auto;font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.08em;
+    border:1px solid var(--line);border-radius:99px;padding:4px 12px;color:var(--slate);
+  }
+  .masthead{
+    display:flex;align-items:flex-end;justify-content:space-between;gap:24px;
+    padding-bottom:24px;border-bottom:1px solid var(--line);margin-bottom:20px;flex-wrap:wrap;
+  }
+  h1{font-size:clamp(26px,4vw,40px);font-weight:700;letter-spacing:-.02em;line-height:1.1}
+  .vault-meta{color:var(--slate);font-size:14px;margin-top:8px;display:flex;gap:18px;flex-wrap:wrap}
+  .vault-meta b{color:var(--ink);font-weight:500}
+
+  .grade{
+    text-align:center;border:1px solid var(--line);border-radius:var(--radius);
+    padding:14px 22px;background:linear-gradient(160deg,var(--panel-2),var(--panel));
+    min-width:150px;
+  }
+  .grade .g{font-size:44px;font-weight:700;color:var(--blue);line-height:1;letter-spacing:-.02em}
+  .grade .g sub{font-size:16px;color:var(--slate);font-weight:500}
+  .grade .lbl{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--slate);margin-top:6px}
+  .grade .sub{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--slate);margin-top:8px}
+
+  /* ---------- view toggle ---------- */
+  .toggle{
+    display:inline-flex;border:1px solid var(--line);border-radius:99px;overflow:hidden;margin:4px 0 26px;
+  }
+  .toggle button{
+    background:none;border:0;color:var(--slate);font:inherit;font-size:13px;font-weight:500;
+    padding:9px 22px;cursor:pointer;transition:all .18s ease;
+  }
+  .toggle button:focus-visible{outline:2px solid var(--blue);outline-offset:-2px}
+  .toggle button.active{background:var(--blue);color:#fff}
+  .toggle button:not(.active):hover{color:var(--ink)}
+
+  /* ---------- grid ---------- */
+  .grid{display:grid;grid-template-columns:1fr 1.25fr 1fr;gap:16px}
+  @media (max-width:900px){.grid{grid-template-columns:1fr}}
+  .card{
+    background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);
+    padding:22px;
+  }
+  .card h2{
+    font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--slate);
+    font-weight:600;margin-bottom:16px;display:flex;align-items:center;gap:8px;
+  }
+  .card h2::after{content:"";flex:1;height:1px;background:var(--line)}
+
+  /* guarantees */
+  .guarantee{display:flex;justify-content:space-between;align-items:baseline;padding:9px 0;border-bottom:1px dashed var(--line);gap:10px}
+  .guarantee:last-child{border-bottom:0}
+  .guarantee .k{color:var(--slate);font-size:13px}
+  .guarantee .v{font-family:'IBM Plex Mono',monospace;font-size:13px;text-align:right}
+  .pill{display:inline-block;border-radius:5px;padding:2px 8px;font-size:12px;font-weight:500}
+  .pill.ok{color:var(--ok);background:rgba(61,214,140,.1)}
+  .pill.warn{color:var(--warn);background:rgba(245,165,36,.1)}
+  .pill.off{color:var(--slate);background:rgba(138,147,178,.1)}
+
+  /* exposure bars */
+  .bar-row{margin-bottom:14px}
+  .bar-row .top{display:flex;justify-content:space-between;font-size:13px;margin-bottom:6px}
+  .bar-row .top .name{color:var(--ink)}
+  .bar-row .top .pct{font-family:'IBM Plex Mono',monospace;color:var(--slate)}
+  .bar{height:9px;border-radius:5px;background:var(--panel-2);overflow:hidden;position:relative}
+  .bar .fill{
+    height:100%;border-radius:5px;background:linear-gradient(90deg,var(--blue),#6FA0FF);
+    width:0;transition:width .9s cubic-bezier(.2,.8,.2,1);
+  }
+  .bar .cap{position:absolute;top:-3px;bottom:-3px;width:2px;background:var(--slate);opacity:.7}
+  .bar-row.flagged .fill{background:linear-gradient(90deg,#C97A16,var(--warn))}
+  .flag-note{
+    display:flex;gap:10px;align-items:flex-start;margin-top:16px;
+    background:rgba(245,165,36,.07);border:1px solid rgba(245,165,36,.25);border-radius:8px;
+    padding:12px 14px;font-size:13px;color:var(--ink);
+  }
+  .flag-note .ico{color:var(--warn);font-weight:700}
+  .flag-note b{color:var(--warn)}
+  .legend{display:flex;gap:16px;margin-top:14px;font-size:11px;color:var(--slate)}
+  .legend span{display:flex;align-items:center;gap:6px}
+  .legend i{width:10px;height:2px;background:var(--slate);display:inline-block}
+
+  /* maturity ladder */
+  .ladder .rung{display:grid;grid-template-columns:118px 1fr 44px;gap:10px;align-items:center;margin-bottom:9px}
+  .ladder .m{font-size:12px;color:var(--slate)}
+  .ladder .p{font-size:12px;color:var(--slate);text-align:right}
+  .ladder .bar{height:7px}
+  .ladder .fill{background:linear-gradient(90deg,#5B3FD4,#8E7BFF)}
+  .term-note{font-size:12px;color:var(--slate);margin-top:12px;line-height:1.6}
+  .term-note b{color:var(--ink);font-weight:500}
+
+  /* curator + audits */
+  .stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px}
+  .stat{background:var(--panel-2);border-radius:8px;padding:12px 14px}
+  .stat .n{font-family:'IBM Plex Mono',monospace;font-size:19px;font-weight:600}
+  .stat .l{font-size:11px;color:var(--slate);margin-top:3px;letter-spacing:.04em}
+  .timeline{list-style:none}
+  .timeline li{
+    position:relative;padding:0 0 14px 22px;font-size:13px;color:var(--slate);
+  }
+  .timeline li::before{
+    content:"";position:absolute;left:5px;top:6px;width:7px;height:7px;border-radius:50%;
+    background:var(--ok);
+  }
+  .timeline li::after{
+    content:"";position:absolute;left:8px;top:16px;bottom:-2px;width:1px;background:var(--line);
+  }
+  .timeline li:last-child::after{display:none}
+  .timeline li b{color:var(--ink);font-weight:500}
+  .timeline li .d{font-family:'IBM Plex Mono',monospace;font-size:11px}
+
+  /* API view */
+  #apiView{display:none}
+  pre{
+    background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);
+    padding:24px;overflow-x:auto;font-family:'IBM Plex Mono',monospace;font-size:12.5px;line-height:1.7;
+    color:var(--slate);
+  }
+  pre .key{color:#6FA0FF}
+  pre .str{color:var(--ink)}
+  pre .num{color:var(--ok)}
+  pre .flag{color:var(--warn)}
+  .api-note{font-size:13px;color:var(--slate);margin-bottom:14px}
+  .api-note code{font-family:'IBM Plex Mono',monospace;color:var(--blue);font-size:12px}
+
+  /* ---------- MRZ signature strip ---------- */
+  .mrz{
+    margin-top:22px;border-radius:var(--radius);border:1px solid var(--line);
+    background:repeating-linear-gradient(0deg,#0D1122,#0D1122 3px,#0E1326 3px,#0E1326 6px);
+    padding:18px 22px;
+    font-family:'IBM Plex Mono',monospace;font-size:clamp(10px,1.6vw,14px);
+    letter-spacing:.14em;color:var(--slate);
+    white-space:nowrap;overflow-x:auto;line-height:1.9;
+  }
+  .mrz b{color:var(--ink);font-weight:500}
+  .mrz .hl{color:var(--blue)}
+  .mrz-cap{font-size:11px;color:var(--slate);letter-spacing:.1em;text-transform:uppercase;margin-top:10px;text-align:right}
+
+  /* ---------- footer ---------- */
+  footer{
+    max-width:1060px;margin:34px auto 0;padding-top:18px;border-top:1px solid var(--line);
+    display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;
+    color:var(--slate);font-size:12.5px;
+  }
+  footer a{color:var(--blue);text-decoration:none}
+  footer a:hover{text-decoration:underline}
+
+  @media (prefers-reduced-motion:reduce){
+    .bar .fill{transition:none}
+    html{scroll-behavior:auto}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="eyebrow">
+    <span class="dot" aria-hidden="true"></span>
+    Vault Risk Passport
+    <span class="tag">CONCEPT · ILLUSTRATIVE DATA</span>
+  </div>
+
+  <div class="masthead">
+    <div>
+      <h1>USDC Prime Vault</h1>
+      <div class="vault-meta">
+        <span>Curator&nbsp;<b>Example Curator SAS</b></span>
+        <span>Chain&nbsp;<b>Ethereum</b></span>
+        <span>Standard&nbsp;<b>Morpho Vaults V2 · ERC-4626</b></span>
+        <span>TVL&nbsp;<b class="mono">$412.6M</b></span>
+      </div>
+    </div>
+    <div class="grade" role="img" aria-label="Overall risk grade A minus">
+      <div class="g">A<sub>−</sub></div>
+      <div class="lbl">Passport Grade</div>
+      <div class="sub">GUAR 94 · EXPO 81 · OPS 88</div>
+    </div>
+  </div>
+
+  <div class="toggle" role="tablist" aria-label="Passport view">
+    <button id="btnHuman" class="active" role="tab" aria-selected="true" onclick="setView('human')">Committee view</button>
+    <button id="btnApi" role="tab" aria-selected="false" onclick="setView('api')">API view</button>
+  </div>
+
+  <!-- ================= HUMAN VIEW ================= -->
+  <div id="humanView">
+    <div class="grid">
+
+      <section class="card" aria-labelledby="h-guarantees">
+        <h2 id="h-guarantees">Noncustodial guarantees</h2>
+        <div class="guarantee"><span class="k">Timelock on risk changes</span><span class="v">7 days</span></div>
+        <div class="guarantee"><span class="k">In-kind redemptions</span><span class="v"><span class="pill ok">Enabled</span></span></div>
+        <div class="guarantee"><span class="k">Access gate</span><span class="v"><span class="pill off">None — open</span></span></div>
+        <div class="guarantee"><span class="k">Absolute exposure caps</span><span class="v"><span class="pill ok">Set · 6 markets</span></span></div>
+        <div class="guarantee"><span class="k">Relative exposure caps</span><span class="v"><span class="pill ok">≤ 35% / market</span></span></div>
+        <div class="guarantee"><span class="k">Role segregation</span><span class="v">Owner ≠ Curator ≠ Allocator</span></div>
+        <div class="guarantee"><span class="k">Emergency deallocation</span><span class="v"><span class="pill ok">Sentinel set</span></span></div>
+        <div class="guarantee"><span class="k">Fee</span><span class="v">10% perf · 0% mgmt</span></div>
+      </section>
+
+      <section class="card" aria-labelledby="h-exposure">
+        <h2 id="h-exposure">Live exposure & concentration</h2>
+
+        <div class="bar-row">
+          <div class="top"><span class="name">cbBTC / USDC · 86% LLTV</span><span class="pct">31.8%</span></div>
+          <div class="bar"><div class="fill" data-w="31.8"></div><span class="cap" style="left:35%"></span></div>
+        </div>
+        <div class="bar-row flagged">
+          <div class="top"><span class="name">wstETH / USDC · 86% LLTV</span><span class="pct">33.4%</span></div>
+          <div class="bar"><div class="fill" data-w="33.4"></div><span class="cap" style="left:35%"></span></div>
+        </div>
+        <div class="bar-row">
+          <div class="top"><span class="name">WBTC / USDC · 86% LLTV</span><span class="pct">19.6%</span></div>
+          <div class="bar"><div class="fill" data-w="19.6"></div><span class="cap" style="left:35%"></span></div>
+        </div>
+        <div class="bar-row">
+          <div class="top"><span class="name">PT-sUSDe / USDC · 91.5% LLTV</span><span class="pct">9.7%</span></div>
+          <div class="bar"><div class="fill" data-w="9.7"></div><span class="cap" style="left:15%"></span></div>
+        </div>
+        <div class="bar-row">
+          <div class="top"><span class="name">Idle + other (2 markets)</span><span class="pct">5.5%</span></div>
+          <div class="bar"><div class="fill" data-w="5.5"></div></div>
+        </div>
+
+        <div class="legend"><span><i></i>Curator cap per market</span></div>
+
+        <div class="flag-note">
+          <span class="ico" aria-hidden="true">⚠</span>
+          <span><b>Concentration drift:</b> wstETH exposure at 33.4% vs 35% cap — within limits, trending +2.1pt over 14 days. Alert fires to curator &amp; subscribed depositors at 34%.</span>
+        </div>
+
+        <h2 style="margin-top:22px" id="h-term">Term exposure · Midnight allocation</h2>
+        <div class="ladder">
+          <div class="rung"><span class="m">Open-term (Blue)</span><div class="bar"><div class="fill" data-w="78"></div></div><span class="p mono">78%</span></div>
+          <div class="rung"><span class="m">SEP-26 maturity</span><div class="bar"><div class="fill" data-w="12"></div></div><span class="p mono">12%</span></div>
+          <div class="rung"><span class="m">DEC-26 maturity</span><div class="bar"><div class="fill" data-w="7"></div></div><span class="p mono">7%</span></div>
+          <div class="rung"><span class="m">MAR-27 maturity</span><div class="bar"><div class="fill" data-w="3"></div></div><span class="p mono">3%</span></div>
+        </div>
+        <p class="term-note">Weighted avg. time-to-maturity of fixed-term book: <b class="mono">96 days</b> · rolled via maker callbacks · fixed-rate share disclosed so allocators can read duration risk, not just collateral risk.</p>
+      </section>
+
+      <section class="card" aria-labelledby="h-curator">
+        <h2 id="h-curator">Curator & operations</h2>
+        <div class="stat-grid">
+          <div class="stat"><div class="n">$2.1B</div><div class="l">AUM across vaults</div></div>
+          <div class="stat"><div class="n">31 mo</div><div class="l">Live on Morpho</div></div>
+          <div class="stat"><div class="n">0</div><div class="l">Depositor loss events</div></div>
+          <div class="stat"><div class="n">−0.4%</div><div class="l">Max drawdown (share px)</div></div>
+        </div>
+        <h2>Audit lineage</h2>
+        <ul class="timeline">
+          <li><b>Vaults V2 protocol</b> — Spearbit, ChainSecurity, Zellic <span class="d">· 2025</span></li>
+          <li><b>Cantina competition</b> — public contest, 0 criticals open <span class="d">· 2025</span></li>
+          <li><b>Vault config review</b> — independent, annual <span class="d">· 2026-03</span></li>
+          <li><b>Incident drill</b> — sentinel deallocation rehearsed <span class="d">· 2026-05</span></li>
+        </ul>
+      </section>
+
+    </div>
+  </div>
+
+  <!-- ================= API VIEW ================= -->
+  <div id="apiView">
+    <p class="api-note">Same passport, machine-readable. <code>GET /v1/vaults/0x…/passport</code> — designed to drop into an allocator's internal risk system, screening pipeline, or monitoring stack.</p>
+<pre aria-label="Passport JSON">{
+  <span class="key">"passport_version"</span>: <span class="str">"0.1-concept"</span>,
+  <span class="key">"vault"</span>: { <span class="key">"name"</span>: <span class="str">"USDC Prime Vault"</span>, <span class="key">"standard"</span>: <span class="str">"morpho-vaults-v2"</span>, <span class="key">"chain_id"</span>: <span class="num">1</span>, <span class="key">"tvl_usd"</span>: <span class="num">412600000</span> },
+  <span class="key">"grade"</span>: { <span class="key">"overall"</span>: <span class="str">"A-"</span>, <span class="key">"guarantees"</span>: <span class="num">94</span>, <span class="key">"exposure"</span>: <span class="num">81</span>, <span class="key">"operations"</span>: <span class="num">88</span> },
+  <span class="key">"guarantees"</span>: {
+    <span class="key">"timelock_days"</span>: <span class="num">7</span>,
+    <span class="key">"in_kind_redemptions"</span>: <span class="num">true</span>,
+    <span class="key">"gate"</span>: <span class="str">"none"</span>,
+    <span class="key">"relative_cap_max_pct"</span>: <span class="num">35</span>,
+    <span class="key">"role_segregation"</span>: <span class="num">true</span>,
+    <span class="key">"sentinel"</span>: <span class="num">true</span>
+  },
+  <span class="key">"exposure"</span>: [
+    { <span class="key">"market"</span>: <span class="str">"cbBTC/USDC-86"</span>,   <span class="key">"pct"</span>: <span class="num">31.8</span>, <span class="key">"cap_pct"</span>: <span class="num">35</span> },
+    { <span class="key">"market"</span>: <span class="str">"wstETH/USDC-86"</span>,  <span class="key">"pct"</span>: <span class="num">33.4</span>, <span class="key">"cap_pct"</span>: <span class="num">35</span>, <span class="flag">"alert"</span>: <span class="flag">"concentration_drift"</span> },
+    { <span class="key">"market"</span>: <span class="str">"WBTC/USDC-86"</span>,    <span class="key">"pct"</span>: <span class="num">19.6</span>, <span class="key">"cap_pct"</span>: <span class="num">35</span> },
+    { <span class="key">"market"</span>: <span class="str">"PT-sUSDe/USDC-915"</span>, <span class="key">"pct"</span>: <span class="num">9.7</span>, <span class="key">"cap_pct"</span>: <span class="num">15</span> }
+  ],
+  <span class="key">"term_exposure"</span>: {
+    <span class="key">"open_term_pct"</span>: <span class="num">78</span>,
+    <span class="key">"fixed_term"</span>: [
+      { <span class="key">"maturity"</span>: <span class="str">"2026-09-25"</span>, <span class="key">"pct"</span>: <span class="num">12</span> },
+      { <span class="key">"maturity"</span>: <span class="str">"2026-12-25"</span>, <span class="key">"pct"</span>: <span class="num">7</span> },
+      { <span class="key">"maturity"</span>: <span class="str">"2027-03-26"</span>, <span class="key">"pct"</span>: <span class="num">3</span> }
+    ],
+    <span class="key">"wavg_ttm_days"</span>: <span class="num">96</span>,
+    <span class="key">"protocol"</span>: <span class="str">"morpho-midnight"</span>
+  },
+  <span class="key">"curator"</span>: { <span class="key">"aum_usd"</span>: <span class="num">2100000000</span>, <span class="key">"months_live"</span>: <span class="num">31</span>, <span class="key">"loss_events"</span>: <span class="num">0</span>, <span class="key">"max_drawdown_pct"</span>: <span class="num">-0.4</span> },
+  <span class="key">"audits"</span>: [<span class="str">"spearbit"</span>, <span class="str">"chainsecurity"</span>, <span class="str">"zellic"</span>, <span class="str">"cantina-competition"</span>],
+  <span class="key">"attestation"</span>: { <span class="key">"generated_at"</span>: <span class="str">"2026-07-17T09:00:00Z"</span>, <span class="key">"source"</span>: <span class="str">"onchain + curator-signed"</span> }
+}</pre>
+  </div>
+
+  <!-- ================= MRZ SIGNATURE ================= -->
+  <div class="mrz" aria-label="Machine readable summary strip">
+    P&lt;MORPHO&lt;&lt;<b>USDC&lt;PRIME&lt;VAULT</b>&lt;&lt;V2&lt;ETH&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;<br>
+    <span class="hl">GRADE&lt;A-</span>&lt;&lt;TVL&lt;412.6M&lt;&lt;TL&lt;7D&lt;&lt;IKR&lt;Y&lt;&lt;CAP&lt;35PCT&lt;&lt;AUD&lt;4&lt;&lt;LOSS&lt;0&lt;&lt;<span class="hl">2026071</span>
+  </div>
+  <div class="mrz-cap">Human-readable for the risk committee · machine-readable for the stack</div>
+
+</div>
+
+<footer>
+  <span>Concept mockup — <b style="color:var(--ink)">Gauthier Maufroy</b> · illustrative data only, not affiliated with or endorsed by Morpho, no investment advice.</span>
+  <span>Thesis: the next $10B of vault deposits is unlocked by legible trust.</span>
+</footer>
+
+<script>
+  // animate exposure bars on load
+  window.addEventListener('load', () => {
+    document.querySelectorAll('.bar .fill').forEach(f => {
+      requestAnimationFrame(() => { f.style.width = f.dataset.w + '%'; });
+    });
+  });
+
+  function setView(v){
+    const human = v === 'human';
+    document.getElementById('humanView').style.display = human ? '' : 'none';
+    document.getElementById('apiView').style.display   = human ? 'none' : '';
+    document.getElementById('btnHuman').classList.toggle('active', human);
+    document.getElementById('btnApi').classList.toggle('active', !human);
+    document.getElementById('btnHuman').setAttribute('aria-selected', human);
+    document.getElementById('btnApi').setAttribute('aria-selected', !human);
+    if (human) {
+      document.querySelectorAll('.bar .fill').forEach(f => { f.style.width = f.dataset.w + '%'; });
+    }
+  }
+</script>
+</body>
+</html>
