@@ -2,7 +2,7 @@
 
 A concept prototype exploring how Morpho Vaults could make externalized risk **legible, comparable, and monitorable** for institutional allocators.
 
-**Thesis:** the binding constraint on the next $10B of vault deposits isn't yield or protocol capability — it's the cost of trust. A standardized, per-vault risk & compliance disclosure — human-readable for risk committees, machine-readable via API — collapses that cost. A rating is an opinion; the Passport is the verifiable balance sheet underneath it.
+**Thesis:** the binding constraint on the next $10B of vault deposits isn't yield or protocol capability — it's the cost of trust. A standardized, per-vault risk & compliance disclosure — human-readable for risk committees, machine-readable via API — collapses that cost. The idea is to reuse what TradFi is doing correctly while improving it, and adapting it to DeFi.
 
 ## Live demo
 
