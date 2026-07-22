@@ -53,7 +53,6 @@
   .switch::after{content:"";position:absolute;top:3px;right:3px;width:16px;height:16px;border-radius:50%;background:#fff;transition:all .18s}
   .switch.off{background:#D6D8E0}
   .switch.off::after{right:21px}
-  /* proposed addition: risk toggle */
   .fbtn.risk{border:1px dashed #BBD1FF;background:var(--blue-soft);color:var(--blue);margin-left:2px}
   .fbtn.risk.off{background:none;border-color:var(--line);color:var(--slate)}
   .spacer{flex:1}
@@ -62,10 +61,12 @@
     padding:8px 12px;min-width:200px;color:var(--mute);background:var(--card);
   }
   .search input{border:0;outline:0;font:inherit;color:var(--ink);width:130px;background:none}
-  .icon-btn{border:0;background:none;color:var(--mute);font-size:16px;padding:8px;border-radius:8px;cursor:pointer}
-  .icon-btn:hover{background:var(--line-2)}
+  .icon-btn{border:0;background:none;color:var(--ink);font-size:16px;padding:8px;border-radius:8px;cursor:pointer;opacity:.85}
+  .icon-btn:hover{background:var(--line-2);opacity:1}
 
   /* table */
+  .table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+  .table-wrap table{min-width:1020px}
   table{width:100%;border-collapse:collapse}
   thead th{
     text-align:left;font-size:13px;font-weight:500;color:var(--slate);
@@ -75,18 +76,21 @@
   thead th:first-child{padding-left:22px}
   tbody td{padding:15px 14px;border-bottom:1px solid var(--line-2);vertical-align:middle;white-space:nowrap}
   tbody td:first-child{padding-left:22px}
-  tbody tr:hover{background:#FBFBFD;cursor:pointer}
+  tbody tr:hover{background:#FBFBFD}
   tbody tr:last-child td{border-bottom:0}
 
-  .net{width:20px;height:20px;border-radius:5px;display:inline-block;vertical-align:middle}
-  .net.round{border-radius:50%}
-  .net.eth{background:transparent;position:relative}
-  .net.eth::before{content:"⟠";color:#7B8094;font-size:18px;line-height:20px;display:block;text-align:center}
+  .net{width:20px;height:20px;border-radius:5px;display:inline-flex;align-items:center;justify-content:center;vertical-align:middle}
+  .net.base{background:#1D4FFF}
+  .net.eth{background:#F0F1F5;border-radius:50%}
+  .net.eth svg{width:12px;height:12px}
+  .net.rh{background:#00C805;border-radius:50%}
+  .net.rh svg{width:12px;height:12px}
 
   .vault{display:flex;align-items:center;gap:10px;font-weight:500;font-size:15px}
   .coin{width:26px;height:26px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;
     color:#fff;font-size:12px;font-weight:700;flex:none}
   .tag-v2{background:var(--blue-soft);color:var(--blue);font-size:11.5px;font-weight:600;border-radius:99px;padding:3px 9px}
+  .tag-v1{background:var(--chip);color:var(--slate);font-size:11.5px;font-weight:600;border-radius:99px;padding:3px 9px}
 
   .amt{font-size:15px;font-weight:500}
   .usd{display:inline-block;background:var(--chip);color:var(--slate);border-radius:99px;padding:3px 9px;font-size:12.5px;margin-top:6px}
@@ -98,11 +102,26 @@
 
   .curator{display:flex;align-items:center;gap:9px;font-weight:500;font-size:14.5px}
 
+  /* hover tooltips */
+  .hastip{position:relative;cursor:default}
+  .tip{
+    display:none;position:absolute;right:0;top:calc(100% + 6px);z-index:20;
+    background:var(--card);border:1px solid var(--line);border-radius:12px;
+    box-shadow:0 8px 24px rgba(16,17,24,.12);padding:14px 16px;min-width:240px;
+    font-size:13px;font-weight:400;white-space:nowrap;text-align:left;
+  }
+  .hastip:hover .tip{display:block}
+  .tip .row{display:flex;justify-content:space-between;gap:24px;padding:4px 0;color:var(--ink)}
+  .tip .row .k{color:var(--slate);display:flex;align-items:center;gap:6px}
+  .tip .row.total{border-top:1px solid var(--line);margin-top:6px;padding-top:9px;font-weight:600;font-size:14px}
+  .tip .chip{background:var(--chip);border-radius:99px;padding:1px 8px;font-size:12px;color:var(--ink)}
+  .tip .pos{color:var(--ok)}
+  .tip .warnline{color:var(--warn)}
+
   .apy{font-size:15px;font-weight:500}
   .spark{color:var(--blue);font-size:12px;margin-left:4px}
-  .apy.mix{border-bottom:1px dotted var(--mute);cursor:help}
 
-  /* proposed addition: risk column */
+  /* risk column */
   th.riskcol,td.riskcol{transition:opacity .2s}
   .grade{
     display:inline-flex;align-items:center;gap:6px;font-weight:600;font-size:12.5px;
@@ -113,15 +132,10 @@
   .grade.c{background:var(--warn-bg);color:var(--warn)}
   .drift{width:7px;height:7px;border-radius:50%;background:var(--warn);display:inline-block;flex:none}
   body.norisk .riskcol{display:none}
-
-  .table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
-  .table-wrap table{min-width:980px}
-
-  .note{max-width:1200px;margin:18px auto 0;color:var(--mute);font-size:12px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
-  .note b{color:var(--slate);font-weight:500}
+  body.v2only tr[data-v="v1"]{display:none}
 </style>
 </head>
-<body>
+<body class="v2only">
 
 <div class="top">
   <h1>Vaults <span class="help">?</span></h1>
@@ -135,8 +149,8 @@
     <button class="fbtn"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M4 6h16M7 12h10M10 18h4"/></svg>Curator</button>
     <button class="fbtn"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M4 6h16M7 12h10M10 18h4"/></svg>Advanced</button>
     <span class="v2pill">V2</span>
-    <button class="switch" aria-label="V2 filter" onclick="this.classList.toggle('off')"></button>
-    <button class="fbtn risk" id="riskBtn" onclick="toggleRisk()" title="Proposed addition — toggle to compare with current UI">
+    <button class="switch" id="v2switch" aria-label="Filter V2 vaults only" onclick="toggleV2()"></button>
+    <button class="fbtn risk" id="riskBtn" onclick="toggleRisk()">
       <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M12 3l7 4v5c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V7l7-4z"/></svg>Risk
     </button>
     <span class="spacer"></span>
@@ -152,124 +166,301 @@
         <th>Network</th>
         <th>Vault</th>
         <th>Deposits ↓</th>
-        <th class="hide-sm">Liquidity</th>
-        <th class="hide-sm">Exposure</th>
+        <th>Liquidity</th>
+        <th>Exposure</th>
         <th>Curator</th>
         <th class="riskcol">Risk</th>
         <th>APY</th>
       </tr>
     </thead>
     <tbody>
-      <tr onclick="void(0)">
-        <td><span class="net" style="background:#1D4FFF"></span></td>
+
+      <tr data-v="v2">
+        <td><span class="net base"></span></td>
         <td><span class="vault"><span class="coin" style="background:#2775CA">$</span>Steakhouse Prime USDC <span class="tag-v2">V2</span></span></td>
         <td><div class="amt">365.50M USDC</div><span class="usd">$365.43M</span></td>
-        <td class="hide-sm"><div class="amt">143.11M USDC</div><span class="usd">$143.08M</span></td>
-        <td class="hide-sm"><span class="stack">
+        <td><div class="amt">143.11M USDC</div><span class="usd">$143.08M</span></td>
+        <td><span class="stack">
           <span class="coin" style="background:#F7931A">₿</span><span class="coin" style="background:#5A70D6">W</span><span class="coin" style="background:#66B8E8">⟠</span><span class="coin" style="background:#8AA6F0">s</span>
         </span></td>
         <td><span class="curator"><span class="coin" style="background:#123B33">S</span>Steakhouse Financial</span></td>
-        <td class="riskcol"><a class="grade a" href="https://gautmauf.github.io/crypto-vault-mockup/" target="_blank" rel="noopener" title="Open Vault Risk Passport — wstETH exposure trending toward its cap"><span class="drift"></span>A−</a></td>
-        <td><span class="apy">4.31%</span></td>
+        <td class="riskcol"><span class="hastip"><a class="grade a" href="https://gautmauf.github.io/crypto-vault-mockup/" target="_blank" rel="noopener"><span class="drift"></span>A−</a>
+          <span class="tip">
+            <span class="row"><span class="k">Curator first-loss</span><span>2.0% TVL · junior</span></span>
+            <span class="row"><span class="k">Liquidity floor / WAM</span><span>30% · 96d</span></span>
+            <span class="row"><span class="k">Look-through</span><span class="pos">38 contracts · 0 flags</span></span>
+            <span class="row"><span class="k">Concentration</span><span class="warnline">wstETH 33.4% vs 35% cap</span></span>
+            <span class="row total"><span class="k">Full passport</span><span>click grade →</span></span>
+          </span>
+        </span></td>
+        <td><span class="hastip"><span class="apy">4.31%</span>
+          <span class="tip">
+            <span class="row"><span class="k">Vault Net APY</span><span>4.31%</span></span>
+            <span class="row"><span class="k">Performance Fee</span><span class="chip">0%</span></span>
+            <span class="row"><span class="k">Management Fee</span><span class="chip">0%</span></span>
+            <span class="row total"><span class="k">Net APY</span><span>4.31%</span></span>
+          </span>
+        </span></td>
       </tr>
-      <tr>
-        <td><span class="net eth"></span></td>
+
+      <tr data-v="v2">
+        <td><span class="net eth"><svg viewBox="0 0 24 24"><path d="M12 2l6 10-6 3.6L6 12z" fill="#62688F"/><path d="M12 22l6-8.4-6 3.6-6-3.6z" fill="#8A92B2"/></svg></span></td>
         <td><span class="vault"><span class="coin" style="background:#0070E0">P</span>Paypal USD Main <span class="tag-v2">V2</span></span></td>
         <td><div class="amt">323.85M PYUSD</div><span class="usd">$323.76M</span></td>
-        <td class="hide-sm"><div class="amt">56.65M PYUSD</div><span class="usd">$56.63M</span></td>
-        <td class="hide-sm"><span class="stack">
+        <td><div class="amt">56.65M PYUSD</div><span class="usd">$56.63M</span></td>
+        <td><span class="stack">
           <span class="coin" style="background:#F7931A">₿</span><span class="coin" style="background:#2775CA">$</span><span class="coin" style="background:#66B8E8">⟠</span><span class="coin" style="background:#E2761B">₿</span><span class="coin" style="background:#26A17B">T</span>
         </span><span class="more">+5</span></td>
         <td><span class="curator"><span class="coin" style="background:#4B3FD4">Se</span>Sentora</span></td>
-        <td class="riskcol"><a class="grade b" href="#" onclick="return false" title="Passport pending — concept">B+</a></td>
-        <td><span class="apy mix" title="3.1% native + 1.69% rewards · campaign ends 2026-09-30">4.79%</span><span class="spark">✦</span></td>
+        <td class="riskcol"><span class="hastip"><a class="grade b" href="#" onclick="return false">B+</a>
+          <span class="tip">
+            <span class="row"><span class="k">Curator first-loss</span><span>none disclosed</span></span>
+            <span class="row"><span class="k">Liquidity floor / WAM</span><span>22% · 71d</span></span>
+            <span class="row"><span class="k">Look-through</span><span class="pos">54 contracts · 0 flags</span></span>
+            <span class="row"><span class="k">Concentration</span><span>within caps</span></span>
+          </span>
+        </span></td>
+        <td><span class="hastip"><span class="apy">4.79%</span><span class="spark">✦</span>
+          <span class="tip">
+            <span class="row"><span class="k">Vault Net APY</span><span>1.70%</span></span>
+            <span class="row"><span class="k"><span class="coin" style="background:#0070E0;width:16px;height:16px;font-size:8px">P</span>PYUSD</span><span class="pos">+3.09%</span></span>
+            <span class="row"><span class="k">Performance Fee</span><span class="chip">0%</span></span>
+            <span class="row"><span class="k">Management Fee</span><span class="chip">0%</span></span>
+            <span class="row total"><span class="k">Net APY</span><span>4.79%</span></span>
+          </span>
+        </span></td>
       </tr>
-      <tr>
-        <td><span class="net eth"></span></td>
+
+      <tr data-v="v2">
+        <td><span class="net eth"><svg viewBox="0 0 24 24"><path d="M12 2l6 10-6 3.6L6 12z" fill="#62688F"/><path d="M12 22l6-8.4-6 3.6-6-3.6z" fill="#8A92B2"/></svg></span></td>
         <td><span class="vault"><span class="coin" style="background:#7A3FF2">R</span>Sentora RLUSD Main <span class="tag-v2">V2</span></span></td>
         <td><div class="amt">289.00M RLUSD</div><span class="usd">$289.05M</span></td>
-        <td class="hide-sm"><div class="amt">45.00M RLUSD</div><span class="usd">$45.01M</span></td>
-        <td class="hide-sm"><span class="stack">
+        <td><div class="amt">45.00M RLUSD</div><span class="usd">$45.01M</span></td>
+        <td><span class="stack">
           <span class="coin" style="background:#F7931A">₿</span><span class="coin" style="background:#66B8E8">⟠</span><span class="coin" style="background:#2775CA">$</span><span class="coin" style="background:#E2761B">₿</span><span class="coin" style="background:#26A17B">T</span>
         </span><span class="more">+3</span></td>
         <td><span class="curator"><span class="coin" style="background:#4B3FD4">Se</span>Sentora</span></td>
-        <td class="riskcol"><a class="grade b" href="#" onclick="return false" title="Passport pending — concept">B+</a></td>
-        <td><span class="apy mix" title="4.2% native + 1.8% rewards · campaign ends 2026-08-15">6.00%</span><span class="spark">✦</span></td>
+        <td class="riskcol"><span class="hastip"><a class="grade b" href="#" onclick="return false">B+</a>
+          <span class="tip">
+            <span class="row"><span class="k">Curator first-loss</span><span>none disclosed</span></span>
+            <span class="row"><span class="k">Liquidity floor / WAM</span><span>16% · 64d</span></span>
+            <span class="row"><span class="k">Look-through</span><span class="pos">41 contracts · 0 flags</span></span>
+            <span class="row"><span class="k">Concentration</span><span>within caps</span></span>
+          </span>
+        </span></td>
+        <td><span class="hastip"><span class="apy">6.00%</span><span class="spark">✦</span>
+          <span class="tip">
+            <span class="row"><span class="k">Vault Net APY</span><span>3.90%</span></span>
+            <span class="row"><span class="k"><span class="coin" style="background:#7A3FF2;width:16px;height:16px;font-size:8px">R</span>RLUSD</span><span class="pos">+2.10%</span></span>
+            <span class="row"><span class="k">Performance Fee</span><span class="chip">5%</span></span>
+            <span class="row"><span class="k">Management Fee</span><span class="chip">0%</span></span>
+            <span class="row total"><span class="k">Net APY</span><span>6.00%</span></span>
+          </span>
+        </span></td>
       </tr>
-      <tr>
-        <td><span class="net" style="background:#1D4FFF"></span></td>
+
+      <tr data-v="v2">
+        <td><span class="net base"></span></td>
         <td><span class="vault"><span class="coin" style="background:#2775CA">$</span>Steakhouse Hig… USDC Edition <span class="tag-v2">V2</span></span></td>
         <td><div class="amt">229.46M USDC</div><span class="usd">$229.42M</span></td>
-        <td class="hide-sm"><div class="amt">28.24M USDC</div><span class="usd">$28.24M</span></td>
-        <td class="hide-sm"><span class="stack">
+        <td><div class="amt">28.24M USDC</div><span class="usd">$28.24M</span></td>
+        <td><span class="stack">
           <span class="coin" style="background:#2775CA">$</span><span class="coin" style="background:#3EC6B8">e</span><span class="coin" style="background:#F7931A">₿</span><span class="coin" style="background:#8B95B4">✕</span><span class="coin" style="background:#66B8E8">⟠</span>
         </span><span class="more">+2</span></td>
         <td><span class="curator"><span class="coin" style="background:#123B33">S</span>Steakhouse Financial</span></td>
-        <td class="riskcol"><a class="grade c" href="#" onclick="return false" title="Higher-yield collateral set — exotic exposure disclosed in Passport">B−</a></td>
-        <td><span class="apy">2.47%</span></td>
+        <td class="riskcol"><span class="hastip"><a class="grade c" href="#" onclick="return false">B−</a>
+          <span class="tip">
+            <span class="row"><span class="k">Curator first-loss</span><span>none disclosed</span></span>
+            <span class="row"><span class="k">Liquidity floor / WAM</span><span>12% · 88d</span></span>
+            <span class="row"><span class="k">Look-through</span><span class="warnline">61 contracts · 1 exotic wrapper</span></span>
+            <span class="row"><span class="k">Concentration</span><span>within caps</span></span>
+          </span>
+        </span></td>
+        <td><span class="hastip"><span class="apy">2.47%</span>
+          <span class="tip">
+            <span class="row"><span class="k">Vault Net APY</span><span>2.47%</span></span>
+            <span class="row"><span class="k">Performance Fee</span><span class="chip">10%</span></span>
+            <span class="row"><span class="k">Management Fee</span><span class="chip">0%</span></span>
+            <span class="row total"><span class="k">Net APY</span><span>2.47%</span></span>
+          </span>
+        </span></td>
       </tr>
-      <tr>
-        <td><span class="net round" style="background:#C6F432"></span></td>
+
+      <tr data-v="v2">
+        <td><span class="net rh"><svg viewBox="0 0 24 24"><path d="M9 19c4.5-1 8-4.5 9.5-12-5 .5-9 3.5-11 8l1.5 4z" fill="#fff"/><path d="M8.2 20.5c.3-2 .8-3.8 1.6-5.5" stroke="#fff" stroke-width="1.4" fill="none" stroke-linecap="round"/></svg></span></td>
         <td><span class="vault"><span class="coin" style="background:#2F5F4F">G</span>Steakhouse USDG <span class="tag-v2">V2</span></span></td>
         <td><div class="amt">147.07M USDG</div><span class="usd">$147.10M</span></td>
-        <td class="hide-sm"><div class="amt">54.22M USDG</div><span class="usd">$54.23M</span></td>
-        <td class="hide-sm"><span class="stack">
+        <td><div class="amt">54.22M USDG</div><span class="usd">$54.23M</span></td>
+        <td><span class="stack">
           <span class="coin" style="background:#2775CA">$</span><span class="coin" style="background:#E8A33D">C</span><span class="coin" style="background:#4E9F3D">g</span>
         </span></td>
         <td><span class="curator"><span class="coin" style="background:#123B33">S</span>Steakhouse Financial</span></td>
-        <td class="riskcol"><a class="grade b" href="#" onclick="return false" title="Passport pending — concept">B+</a></td>
-        <td><span class="apy">1.95%</span></td>
+        <td class="riskcol"><span class="hastip"><a class="grade b" href="#" onclick="return false">B+</a>
+          <span class="tip">
+            <span class="row"><span class="k">Curator first-loss</span><span>none disclosed</span></span>
+            <span class="row"><span class="k">Liquidity floor / WAM</span><span>37% · 40d</span></span>
+            <span class="row"><span class="k">Look-through</span><span class="pos">23 contracts · 0 flags</span></span>
+            <span class="row"><span class="k">Concentration</span><span>within caps</span></span>
+          </span>
+        </span></td>
+        <td><span class="hastip"><span class="apy">1.95%</span>
+          <span class="tip">
+            <span class="row"><span class="k">Vault Net APY</span><span>1.95%</span></span>
+            <span class="row"><span class="k">Performance Fee</span><span class="chip">0%</span></span>
+            <span class="row"><span class="k">Management Fee</span><span class="chip">0%</span></span>
+            <span class="row total"><span class="k">Net APY</span><span>1.95%</span></span>
+          </span>
+        </span></td>
       </tr>
-      <tr>
-        <td><span class="net eth"></span></td>
+
+      <tr data-v="v2">
+        <td><span class="net eth"><svg viewBox="0 0 24 24"><path d="M12 2l6 10-6 3.6L6 12z" fill="#62688F"/><path d="M12 22l6-8.4-6 3.6-6-3.6z" fill="#8A92B2"/></svg></span></td>
         <td><span class="vault"><span class="coin" style="background:#0070E0">P</span>Sentora PRIME Main <span class="tag-v2">V2</span></span></td>
         <td><div class="amt">130.45M PYUSD</div><span class="usd">$130.41M</span></td>
-        <td class="hide-sm"><div class="amt">15.48M PYUSD</div><span class="usd">$15.48M</span></td>
-        <td class="hide-sm"><span class="stack">
+        <td><div class="amt">15.48M PYUSD</div><span class="usd">$15.48M</span></td>
+        <td><span class="stack">
           <span class="coin" style="background:#8E7BFF">P</span>
         </span></td>
         <td><span class="curator"><span class="coin" style="background:#4B3FD4">Se</span>Sentora</span></td>
-        <td class="riskcol"><a class="grade c" href="#" onclick="return false" title="Single-collateral concentration — see Passport">B−</a></td>
-        <td><span class="apy mix" title="3.9% native + 2.22% rewards · campaign ends 2026-10-31">6.12%</span><span class="spark">✦</span></td>
+        <td class="riskcol"><span class="hastip"><a class="grade c" href="#" onclick="return false">B−</a>
+          <span class="tip">
+            <span class="row"><span class="k">Curator first-loss</span><span>none disclosed</span></span>
+            <span class="row"><span class="k">Liquidity floor / WAM</span><span>11% · 102d</span></span>
+            <span class="row"><span class="k">Look-through</span><span class="pos">19 contracts · 0 flags</span></span>
+            <span class="row"><span class="k">Concentration</span><span class="warnline">single-collateral exposure</span></span>
+          </span>
+        </span></td>
+        <td><span class="hastip"><span class="apy">6.12%</span><span class="spark">✦</span>
+          <span class="tip">
+            <span class="row"><span class="k">Vault Net APY</span><span>1.82%</span></span>
+            <span class="row"><span class="k"><span class="coin" style="background:#0070E0;width:16px;height:16px;font-size:8px">P</span>PYUSD</span><span class="pos">+4.30%</span></span>
+            <span class="row"><span class="k">Performance Fee</span><span class="chip">0%</span></span>
+            <span class="row"><span class="k">Management Fee</span><span class="chip">0.99%</span></span>
+            <span class="row total"><span class="k">Net APY</span><span>6.12%</span></span>
+          </span>
+        </span></td>
       </tr>
-      <tr>
-        <td><span class="net eth"></span></td>
+
+      <tr data-v="v2">
+        <td><span class="net eth"><svg viewBox="0 0 24 24"><path d="M12 2l6 10-6 3.6L6 12z" fill="#62688F"/><path d="M12 22l6-8.4-6 3.6-6-3.6z" fill="#8A92B2"/></svg></span></td>
         <td><span class="vault"><span class="coin" style="background:#1A1E2E">€</span>Steakhouse Prime EURCV <span class="tag-v2">V2</span></span></td>
         <td><div class="amt">92.27M EURCV</div><span class="usd">$105.27M</span></td>
-        <td class="hide-sm"><div class="amt">74.01M EURCV</div><span class="usd">$84.43M</span></td>
-        <td class="hide-sm"><span class="stack">
+        <td><div class="amt">74.01M EURCV</div><span class="usd">$84.43M</span></td>
+        <td><span class="stack">
           <span class="coin" style="background:#F7931A">₿</span><span class="coin" style="background:#E2761B">₿</span><span class="coin" style="background:#66B8E8">⟠</span><span class="coin" style="background:#2A3B8F">€</span><span class="coin" style="background:#123B33">S</span>
         </span><span class="more">+1</span></td>
         <td><span class="curator"><span class="coin" style="background:#123B33">S</span>Steakhouse Financial</span></td>
-        <td class="riskcol"><a class="grade a" href="#" onclick="return false" title="Donation-boosted APR — provenance disclosed in Passport">A−</a></td>
-        <td><span class="apy mix" title="1.4% native + 2.09% donation-boosted · no published end date → flagged">3.49%</span><span class="spark">✦</span></td>
+        <td class="riskcol"><span class="hastip"><a class="grade a" href="#" onclick="return false">A−</a>
+          <span class="tip">
+            <span class="row"><span class="k">Curator first-loss</span><span>none disclosed</span></span>
+            <span class="row"><span class="k">Liquidity floor / WAM</span><span>80% · 9d</span></span>
+            <span class="row"><span class="k">Look-through</span><span class="pos">27 contracts · 0 flags</span></span>
+            <span class="row"><span class="k">Yield</span><span class="warnline">donation-boosted · no end date</span></span>
+          </span>
+        </span></td>
+        <td><span class="hastip"><span class="apy">3.49%</span><span class="spark">✦</span>
+          <span class="tip">
+            <span class="row"><span class="k">Vault Net APY</span><span>1.40%</span></span>
+            <span class="row"><span class="k">Donation boost</span><span class="pos">+2.09%</span></span>
+            <span class="row"><span class="k">Performance Fee</span><span class="chip">10%</span></span>
+            <span class="row"><span class="k">Management Fee</span><span class="chip">0%</span></span>
+            <span class="row total"><span class="k">Net APY</span><span>3.49%</span></span>
+          </span>
+        </span></td>
       </tr>
-      <tr>
-        <td><span class="net" style="background:#1D4FFF"></span></td>
+
+      <tr data-v="v2">
+        <td><span class="net base"></span></td>
         <td><span class="vault"><span class="coin" style="background:#2775CA">$</span>Gauntlet USDC Prime <span class="tag-v2">V2</span></span></td>
         <td><div class="amt">86.41M USDC</div><span class="usd">$86.38M</span></td>
-        <td class="hide-sm"><div class="amt">71.10M USDC</div><span class="usd">$71.08M</span></td>
-        <td class="hide-sm"><span class="stack">
+        <td><div class="amt">71.10M USDC</div><span class="usd">$71.08M</span></td>
+        <td><span class="stack">
           <span class="coin" style="background:#F7931A">₿</span><span class="coin" style="background:#5A70D6">W</span><span class="coin" style="background:#66B8E8">⟠</span><span class="coin" style="background:#8AA6F0">s</span>
         </span></td>
         <td><span class="curator"><span class="coin" style="background:#3B3F8F">G</span>Gauntlet</span></td>
-        <td class="riskcol"><a class="grade a" href="#" onclick="return false" title="Passport pending — concept">A</a></td>
-        <td><span class="apy">4.32%</span></td>
+        <td class="riskcol"><span class="hastip"><a class="grade a" href="#" onclick="return false">A</a>
+          <span class="tip">
+            <span class="row"><span class="k">Curator first-loss</span><span>1.5% TVL · junior</span></span>
+            <span class="row"><span class="k">Liquidity floor / WAM</span><span>45% · 31d</span></span>
+            <span class="row"><span class="k">Look-through</span><span class="pos">29 contracts · 0 flags</span></span>
+            <span class="row"><span class="k">Concentration</span><span>within caps</span></span>
+          </span>
+        </span></td>
+        <td><span class="hastip"><span class="apy">4.32%</span>
+          <span class="tip">
+            <span class="row"><span class="k">Vault Net APY</span><span>4.32%</span></span>
+            <span class="row"><span class="k">Performance Fee</span><span class="chip">0%</span></span>
+            <span class="row"><span class="k">Management Fee</span><span class="chip">0%</span></span>
+            <span class="row total"><span class="k">Net APY</span><span>4.32%</span></span>
+          </span>
+        </span></td>
       </tr>
+
+      <tr data-v="v1">
+        <td><span class="net eth"><svg viewBox="0 0 24 24"><path d="M12 2l6 10-6 3.6L6 12z" fill="#62688F"/><path d="M12 22l6-8.4-6 3.6-6-3.6z" fill="#8A92B2"/></svg></span></td>
+        <td><span class="vault"><span class="coin" style="background:#2775CA">$</span>Steakhouse USDC <span class="tag-v1">V1</span></span></td>
+        <td><div class="amt">208.90M USDC</div><span class="usd">$208.86M</span></td>
+        <td><div class="amt">61.37M USDC</div><span class="usd">$61.36M</span></td>
+        <td><span class="stack">
+          <span class="coin" style="background:#F7931A">₿</span><span class="coin" style="background:#66B8E8">⟠</span><span class="coin" style="background:#8AA6F0">s</span>
+        </span><span class="more">+4</span></td>
+        <td><span class="curator"><span class="coin" style="background:#123B33">S</span>Steakhouse Financial</span></td>
+        <td class="riskcol"><span class="hastip"><a class="grade b" href="#" onclick="return false">B+</a>
+          <span class="tip">
+            <span class="row"><span class="k">Curator first-loss</span><span>none disclosed</span></span>
+            <span class="row"><span class="k">Standard</span><span>V1 — no gates, no in-kind</span></span>
+            <span class="row"><span class="k">Look-through</span><span class="pos">33 contracts · 0 flags</span></span>
+          </span>
+        </span></td>
+        <td><span class="hastip"><span class="apy">3.98%</span>
+          <span class="tip">
+            <span class="row"><span class="k">Vault Net APY</span><span>3.98%</span></span>
+            <span class="row"><span class="k">Performance Fee</span><span class="chip">5%</span></span>
+            <span class="row"><span class="k">Management Fee</span><span class="chip">0%</span></span>
+            <span class="row total"><span class="k">Net APY</span><span>3.98%</span></span>
+          </span>
+        </span></td>
+      </tr>
+
+      <tr data-v="v1">
+        <td><span class="net base"></span></td>
+        <td><span class="vault"><span class="coin" style="background:#B8860B">D</span>Gauntlet DAI Core <span class="tag-v1">V1</span></span></td>
+        <td><div class="amt">64.12M DAI</div><span class="usd">$64.10M</span></td>
+        <td><div class="amt">22.87M DAI</div><span class="usd">$22.86M</span></td>
+        <td><span class="stack">
+          <span class="coin" style="background:#F7931A">₿</span><span class="coin" style="background:#66B8E8">⟠</span>
+        </span><span class="more">+2</span></td>
+        <td><span class="curator"><span class="coin" style="background:#3B3F8F">G</span>Gauntlet</span></td>
+        <td class="riskcol"><span class="hastip"><a class="grade b" href="#" onclick="return false">B</a>
+          <span class="tip">
+            <span class="row"><span class="k">Curator first-loss</span><span>none disclosed</span></span>
+            <span class="row"><span class="k">Standard</span><span>V1 — no gates, no in-kind</span></span>
+            <span class="row"><span class="k">Look-through</span><span class="pos">21 contracts · 0 flags</span></span>
+          </span>
+        </span></td>
+        <td><span class="hastip"><span class="apy">3.41%</span>
+          <span class="tip">
+            <span class="row"><span class="k">Vault Net APY</span><span>3.41%</span></span>
+            <span class="row"><span class="k">Performance Fee</span><span class="chip">0%</span></span>
+            <span class="row"><span class="k">Management Fee</span><span class="chip">0%</span></span>
+            <span class="row total"><span class="k">Net APY</span><span>3.41%</span></span>
+          </span>
+        </span></td>
+      </tr>
+
     </tbody>
   </table>
   </div>
-</div>
-
-<div class="note">
-  <span><b>UI concept — Gauthier Maufroy.</b> Reproduction of the Vaults list for demonstration; not affiliated with or endorsed by Morpho. Grades &amp; splits illustrative.</span>
-  <span><b>What's new:</b> the Risk column (toggle "Risk" above to compare), drift dots, and yield-provenance tooltips on ✦ APYs — click A− on row 1 to open the Vault Risk Passport.</span>
 </div>
 
 <script>
   function toggleRisk(){
     document.body.classList.toggle('norisk');
     document.getElementById('riskBtn').classList.toggle('off');
+  }
+  function toggleV2(){
+    document.body.classList.toggle('v2only');
+    document.getElementById('v2switch').classList.toggle('off');
   }
 </script>
 </body>
