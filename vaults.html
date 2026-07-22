@@ -1,0 +1,276 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vaults — UI Concept (+ Risk layer)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#FAFAFB; --card:#FFFFFF; --line:#ECECF1; --line-2:#F3F3F7;
+    --ink:#0F1013; --slate:#6B6F80; --mute:#9A9EAE;
+    --blue:#2470FF; --blue-soft:#E8F0FF;
+    --chip:#F4F4F6;
+    --ok:#0FA968; --ok-bg:#E7F7EF;
+    --mid:#2470FF; --mid-bg:#E8F0FF;
+    --warn:#C97A16; --warn-bg:#FCF1DF;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    background:var(--bg); color:var(--ink);
+    font-family:'Inter',system-ui,sans-serif; font-size:14px;
+    -webkit-font-smoothing:antialiased;
+    padding:36px clamp(16px,4vw,56px) 40px;
+  }
+
+  /* header */
+  .top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:26px;gap:16px;flex-wrap:wrap}
+  .top h1{font-size:42px;font-weight:600;letter-spacing:-.03em;display:flex;align-items:center;gap:12px}
+  .help{width:22px;height:22px;border-radius:50%;background:#E9E9EF;color:var(--mute);
+    font-size:13px;font-weight:600;display:inline-flex;align-items:center;justify-content:center;cursor:default}
+  .total{
+    background:var(--card);border:1px solid var(--line);border-radius:14px;
+    padding:12px 18px;font-size:15px;box-shadow:0 1px 2px rgba(16,17,24,.04);
+    color:var(--slate);white-space:nowrap;
+  }
+  .total b{color:var(--ink);font-weight:600;margin-left:8px}
+
+  /* card */
+  .card{background:var(--card);border:1px solid var(--line);border-radius:16px;box-shadow:0 1px 2px rgba(16,17,24,.04);overflow:hidden}
+
+  /* toolbar */
+  .toolbar{display:flex;align-items:center;gap:6px;padding:14px 18px;flex-wrap:wrap}
+  .fbtn{
+    display:inline-flex;align-items:center;gap:8px;border:0;background:none;color:var(--ink);
+    font:inherit;font-weight:500;padding:8px 12px;border-radius:9px;cursor:pointer;
+  }
+  .fbtn:hover{background:var(--line-2)}
+  .fbtn svg{width:14px;height:14px;stroke:var(--ink)}
+  .v2pill{background:var(--blue);color:#fff;font-size:12px;font-weight:600;border-radius:99px;padding:4px 11px;margin-left:4px}
+  .switch{width:40px;height:22px;border-radius:99px;background:var(--blue);position:relative;cursor:pointer;border:0;margin-left:6px}
+  .switch::after{content:"";position:absolute;top:3px;right:3px;width:16px;height:16px;border-radius:50%;background:#fff;transition:all .18s}
+  .switch.off{background:#D6D8E0}
+  .switch.off::after{right:21px}
+  /* proposed addition: risk toggle */
+  .fbtn.risk{border:1px dashed #BBD1FF;background:var(--blue-soft);color:var(--blue);margin-left:2px}
+  .fbtn.risk.off{background:none;border-color:var(--line);color:var(--slate)}
+  .spacer{flex:1}
+  .search{
+    display:flex;align-items:center;gap:8px;border:1px solid var(--line);border-radius:10px;
+    padding:8px 12px;min-width:200px;color:var(--mute);background:var(--card);
+  }
+  .search input{border:0;outline:0;font:inherit;color:var(--ink);width:130px;background:none}
+  .icon-btn{border:0;background:none;color:var(--mute);font-size:16px;padding:8px;border-radius:8px;cursor:pointer}
+  .icon-btn:hover{background:var(--line-2)}
+
+  /* table */
+  table{width:100%;border-collapse:collapse}
+  thead th{
+    text-align:left;font-size:13px;font-weight:500;color:var(--slate);
+    padding:12px 14px;border-top:1px solid var(--line);border-bottom:1px solid var(--line);
+    white-space:nowrap;
+  }
+  thead th:first-child{padding-left:22px}
+  tbody td{padding:15px 14px;border-bottom:1px solid var(--line-2);vertical-align:middle;white-space:nowrap}
+  tbody td:first-child{padding-left:22px}
+  tbody tr:hover{background:#FBFBFD;cursor:pointer}
+  tbody tr:last-child td{border-bottom:0}
+
+  .net{width:20px;height:20px;border-radius:5px;display:inline-block;vertical-align:middle}
+  .net.round{border-radius:50%}
+  .net.eth{background:transparent;position:relative}
+  .net.eth::before{content:"⟠";color:#7B8094;font-size:18px;line-height:20px;display:block;text-align:center}
+
+  .vault{display:flex;align-items:center;gap:10px;font-weight:500;font-size:15px}
+  .coin{width:26px;height:26px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;
+    color:#fff;font-size:12px;font-weight:700;flex:none}
+  .tag-v2{background:var(--blue-soft);color:var(--blue);font-size:11.5px;font-weight:600;border-radius:99px;padding:3px 9px}
+
+  .amt{font-size:15px;font-weight:500}
+  .usd{display:inline-block;background:var(--chip);color:var(--slate);border-radius:99px;padding:3px 9px;font-size:12.5px;margin-top:6px}
+
+  .stack{display:inline-flex;align-items:center}
+  .stack .coin{width:22px;height:22px;font-size:9px;border:2px solid #fff;margin-left:-7px}
+  .stack .coin:first-child{margin-left:0}
+  .more{color:var(--slate);font-size:13px;margin-left:6px}
+
+  .curator{display:flex;align-items:center;gap:9px;font-weight:500;font-size:14.5px}
+
+  .apy{font-size:15px;font-weight:500}
+  .spark{color:var(--blue);font-size:12px;margin-left:4px}
+  .apy.mix{border-bottom:1px dotted var(--mute);cursor:help}
+
+  /* proposed addition: risk column */
+  th.riskcol,td.riskcol{transition:opacity .2s}
+  .grade{
+    display:inline-flex;align-items:center;gap:6px;font-weight:600;font-size:12.5px;
+    border-radius:7px;padding:4px 9px;text-decoration:none;
+  }
+  .grade.a{background:var(--ok-bg);color:var(--ok)}
+  .grade.b{background:var(--mid-bg);color:var(--mid)}
+  .grade.c{background:var(--warn-bg);color:var(--warn)}
+  .drift{width:7px;height:7px;border-radius:50%;background:var(--warn);display:inline-block;flex:none}
+  body.norisk .riskcol{display:none}
+
+  .table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+  .table-wrap table{min-width:980px}
+
+  .note{max-width:1200px;margin:18px auto 0;color:var(--mute);font-size:12px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+  .note b{color:var(--slate);font-weight:500}
+</style>
+</head>
+<body>
+
+<div class="top">
+  <h1>Vaults <span class="help">?</span></h1>
+  <div class="total">Total Deposits<b>$11,536,191,691</b></div>
+</div>
+
+<div class="card">
+  <div class="toolbar">
+    <button class="fbtn"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M4 6h16M7 12h10M10 18h4"/></svg>Network</button>
+    <button class="fbtn"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M4 6h16M7 12h10M10 18h4"/></svg>Asset</button>
+    <button class="fbtn"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M4 6h16M7 12h10M10 18h4"/></svg>Curator</button>
+    <button class="fbtn"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M4 6h16M7 12h10M10 18h4"/></svg>Advanced</button>
+    <span class="v2pill">V2</span>
+    <button class="switch" aria-label="V2 filter" onclick="this.classList.toggle('off')"></button>
+    <button class="fbtn risk" id="riskBtn" onclick="toggleRisk()" title="Proposed addition — toggle to compare with current UI">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M12 3l7 4v5c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V7l7-4z"/></svg>Risk
+    </button>
+    <span class="spacer"></span>
+    <span class="search"><span>⌕</span><input placeholder="Filter vaults"></span>
+    <button class="icon-btn" title="Settings">⚙</button>
+    <button class="icon-btn" title="Expand">⤢</button>
+  </div>
+
+  <div class="table-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th>Network</th>
+        <th>Vault</th>
+        <th>Deposits ↓</th>
+        <th class="hide-sm">Liquidity</th>
+        <th class="hide-sm">Exposure</th>
+        <th>Curator</th>
+        <th class="riskcol">Risk</th>
+        <th>APY</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr onclick="void(0)">
+        <td><span class="net" style="background:#1D4FFF"></span></td>
+        <td><span class="vault"><span class="coin" style="background:#2775CA">$</span>Steakhouse Prime USDC <span class="tag-v2">V2</span></span></td>
+        <td><div class="amt">365.50M USDC</div><span class="usd">$365.43M</span></td>
+        <td class="hide-sm"><div class="amt">143.11M USDC</div><span class="usd">$143.08M</span></td>
+        <td class="hide-sm"><span class="stack">
+          <span class="coin" style="background:#F7931A">₿</span><span class="coin" style="background:#5A70D6">W</span><span class="coin" style="background:#66B8E8">⟠</span><span class="coin" style="background:#8AA6F0">s</span>
+        </span></td>
+        <td><span class="curator"><span class="coin" style="background:#123B33">S</span>Steakhouse Financial</span></td>
+        <td class="riskcol"><a class="grade a" href="https://gautmauf.github.io/crypto-vault-mockup/" target="_blank" rel="noopener" title="Open Vault Risk Passport — wstETH exposure trending toward its cap"><span class="drift"></span>A−</a></td>
+        <td><span class="apy">4.31%</span></td>
+      </tr>
+      <tr>
+        <td><span class="net eth"></span></td>
+        <td><span class="vault"><span class="coin" style="background:#0070E0">P</span>Paypal USD Main <span class="tag-v2">V2</span></span></td>
+        <td><div class="amt">323.85M PYUSD</div><span class="usd">$323.76M</span></td>
+        <td class="hide-sm"><div class="amt">56.65M PYUSD</div><span class="usd">$56.63M</span></td>
+        <td class="hide-sm"><span class="stack">
+          <span class="coin" style="background:#F7931A">₿</span><span class="coin" style="background:#2775CA">$</span><span class="coin" style="background:#66B8E8">⟠</span><span class="coin" style="background:#E2761B">₿</span><span class="coin" style="background:#26A17B">T</span>
+        </span><span class="more">+5</span></td>
+        <td><span class="curator"><span class="coin" style="background:#4B3FD4">Se</span>Sentora</span></td>
+        <td class="riskcol"><a class="grade b" href="#" onclick="return false" title="Passport pending — concept">B+</a></td>
+        <td><span class="apy mix" title="3.1% native + 1.69% rewards · campaign ends 2026-09-30">4.79%</span><span class="spark">✦</span></td>
+      </tr>
+      <tr>
+        <td><span class="net eth"></span></td>
+        <td><span class="vault"><span class="coin" style="background:#7A3FF2">R</span>Sentora RLUSD Main <span class="tag-v2">V2</span></span></td>
+        <td><div class="amt">289.00M RLUSD</div><span class="usd">$289.05M</span></td>
+        <td class="hide-sm"><div class="amt">45.00M RLUSD</div><span class="usd">$45.01M</span></td>
+        <td class="hide-sm"><span class="stack">
+          <span class="coin" style="background:#F7931A">₿</span><span class="coin" style="background:#66B8E8">⟠</span><span class="coin" style="background:#2775CA">$</span><span class="coin" style="background:#E2761B">₿</span><span class="coin" style="background:#26A17B">T</span>
+        </span><span class="more">+3</span></td>
+        <td><span class="curator"><span class="coin" style="background:#4B3FD4">Se</span>Sentora</span></td>
+        <td class="riskcol"><a class="grade b" href="#" onclick="return false" title="Passport pending — concept">B+</a></td>
+        <td><span class="apy mix" title="4.2% native + 1.8% rewards · campaign ends 2026-08-15">6.00%</span><span class="spark">✦</span></td>
+      </tr>
+      <tr>
+        <td><span class="net" style="background:#1D4FFF"></span></td>
+        <td><span class="vault"><span class="coin" style="background:#2775CA">$</span>Steakhouse Hig… USDC Edition <span class="tag-v2">V2</span></span></td>
+        <td><div class="amt">229.46M USDC</div><span class="usd">$229.42M</span></td>
+        <td class="hide-sm"><div class="amt">28.24M USDC</div><span class="usd">$28.24M</span></td>
+        <td class="hide-sm"><span class="stack">
+          <span class="coin" style="background:#2775CA">$</span><span class="coin" style="background:#3EC6B8">e</span><span class="coin" style="background:#F7931A">₿</span><span class="coin" style="background:#8B95B4">✕</span><span class="coin" style="background:#66B8E8">⟠</span>
+        </span><span class="more">+2</span></td>
+        <td><span class="curator"><span class="coin" style="background:#123B33">S</span>Steakhouse Financial</span></td>
+        <td class="riskcol"><a class="grade c" href="#" onclick="return false" title="Higher-yield collateral set — exotic exposure disclosed in Passport">B−</a></td>
+        <td><span class="apy">2.47%</span></td>
+      </tr>
+      <tr>
+        <td><span class="net round" style="background:#C6F432"></span></td>
+        <td><span class="vault"><span class="coin" style="background:#2F5F4F">G</span>Steakhouse USDG <span class="tag-v2">V2</span></span></td>
+        <td><div class="amt">147.07M USDG</div><span class="usd">$147.10M</span></td>
+        <td class="hide-sm"><div class="amt">54.22M USDG</div><span class="usd">$54.23M</span></td>
+        <td class="hide-sm"><span class="stack">
+          <span class="coin" style="background:#2775CA">$</span><span class="coin" style="background:#E8A33D">C</span><span class="coin" style="background:#4E9F3D">g</span>
+        </span></td>
+        <td><span class="curator"><span class="coin" style="background:#123B33">S</span>Steakhouse Financial</span></td>
+        <td class="riskcol"><a class="grade b" href="#" onclick="return false" title="Passport pending — concept">B+</a></td>
+        <td><span class="apy">1.95%</span></td>
+      </tr>
+      <tr>
+        <td><span class="net eth"></span></td>
+        <td><span class="vault"><span class="coin" style="background:#0070E0">P</span>Sentora PRIME Main <span class="tag-v2">V2</span></span></td>
+        <td><div class="amt">130.45M PYUSD</div><span class="usd">$130.41M</span></td>
+        <td class="hide-sm"><div class="amt">15.48M PYUSD</div><span class="usd">$15.48M</span></td>
+        <td class="hide-sm"><span class="stack">
+          <span class="coin" style="background:#8E7BFF">P</span>
+        </span></td>
+        <td><span class="curator"><span class="coin" style="background:#4B3FD4">Se</span>Sentora</span></td>
+        <td class="riskcol"><a class="grade c" href="#" onclick="return false" title="Single-collateral concentration — see Passport">B−</a></td>
+        <td><span class="apy mix" title="3.9% native + 2.22% rewards · campaign ends 2026-10-31">6.12%</span><span class="spark">✦</span></td>
+      </tr>
+      <tr>
+        <td><span class="net eth"></span></td>
+        <td><span class="vault"><span class="coin" style="background:#1A1E2E">€</span>Steakhouse Prime EURCV <span class="tag-v2">V2</span></span></td>
+        <td><div class="amt">92.27M EURCV</div><span class="usd">$105.27M</span></td>
+        <td class="hide-sm"><div class="amt">74.01M EURCV</div><span class="usd">$84.43M</span></td>
+        <td class="hide-sm"><span class="stack">
+          <span class="coin" style="background:#F7931A">₿</span><span class="coin" style="background:#E2761B">₿</span><span class="coin" style="background:#66B8E8">⟠</span><span class="coin" style="background:#2A3B8F">€</span><span class="coin" style="background:#123B33">S</span>
+        </span><span class="more">+1</span></td>
+        <td><span class="curator"><span class="coin" style="background:#123B33">S</span>Steakhouse Financial</span></td>
+        <td class="riskcol"><a class="grade a" href="#" onclick="return false" title="Donation-boosted APR — provenance disclosed in Passport">A−</a></td>
+        <td><span class="apy mix" title="1.4% native + 2.09% donation-boosted · no published end date → flagged">3.49%</span><span class="spark">✦</span></td>
+      </tr>
+      <tr>
+        <td><span class="net" style="background:#1D4FFF"></span></td>
+        <td><span class="vault"><span class="coin" style="background:#2775CA">$</span>Gauntlet USDC Prime <span class="tag-v2">V2</span></span></td>
+        <td><div class="amt">86.41M USDC</div><span class="usd">$86.38M</span></td>
+        <td class="hide-sm"><div class="amt">71.10M USDC</div><span class="usd">$71.08M</span></td>
+        <td class="hide-sm"><span class="stack">
+          <span class="coin" style="background:#F7931A">₿</span><span class="coin" style="background:#5A70D6">W</span><span class="coin" style="background:#66B8E8">⟠</span><span class="coin" style="background:#8AA6F0">s</span>
+        </span></td>
+        <td><span class="curator"><span class="coin" style="background:#3B3F8F">G</span>Gauntlet</span></td>
+        <td class="riskcol"><a class="grade a" href="#" onclick="return false" title="Passport pending — concept">A</a></td>
+        <td><span class="apy">4.32%</span></td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+</div>
+
+<div class="note">
+  <span><b>UI concept — Gauthier Maufroy.</b> Reproduction of the Vaults list for demonstration; not affiliated with or endorsed by Morpho. Grades &amp; splits illustrative.</span>
+  <span><b>What's new:</b> the Risk column (toggle "Risk" above to compare), drift dots, and yield-provenance tooltips on ✦ APYs — click A− on row 1 to open the Vault Risk Passport.</span>
+</div>
+
+<script>
+  function toggleRisk(){
+    document.body.classList.toggle('norisk');
+    document.getElementById('riskBtn').classList.toggle('off');
+  }
+</script>
+</body>
+</html>

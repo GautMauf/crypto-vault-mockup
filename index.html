@@ -132,6 +132,16 @@
   .term-note{font-size:12px;color:var(--slate);margin-top:12px;line-height:1.6}
   .term-note b{color:var(--ink);font-weight:500}
 
+  /* yield provenance */
+  .yield-card{margin-top:16px}
+  .yield-split{display:flex;height:12px;border-radius:6px;overflow:hidden;margin:14px 0 10px}
+  .yield-split .native{background:linear-gradient(90deg,var(--blue),#6FA0FF)}
+  .yield-split .incent{background:repeating-linear-gradient(45deg,#C97A16,#C97A16 6px,var(--warn) 6px,var(--warn) 12px)}
+  .yield-facts{display:flex;gap:22px;flex-wrap:wrap;font-size:12.5px;color:var(--slate)}
+  .yield-facts b{color:var(--ink);font-weight:500}
+  .yield-facts .mono{font-size:12px}
+  .swatch{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:7px;vertical-align:-1px}
+
   /* curator + audits */
   .stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px}
   .stat{background:var(--panel-2);border-radius:8px;padding:12px 14px}
@@ -217,6 +227,7 @@
       <div class="g">A<sub>−</sub></div>
       <div class="lbl">Passport Grade</div>
       <div class="sub">GUAR 94 · EXPO 81 · OPS 88</div>
+      <div class="sub" style="margin-top:4px;font-size:10px">every score decomposes to verifiable facts ↓</div>
     </div>
   </div>
 
@@ -267,6 +278,8 @@
 
         <div class="legend"><span><i></i>Curator cap per market</span></div>
 
+        <div class="guarantee" style="margin-top:10px"><span class="k">Look-through (transitive risk)</span><span class="v"><span class="pill ok">38 contracts scanned · depth 3 · 0 flagged</span></span></div>
+
         <div class="flag-note">
           <span class="ico" aria-hidden="true">⚠</span>
           <span><b>Concentration drift:</b> wstETH exposure at 33.4% vs 35% cap — within limits, trending +2.1pt over 14 days. Alert fires to curator &amp; subscribed depositors at 34%.</span>
@@ -279,7 +292,7 @@
           <div class="rung"><span class="m">DEC-26 maturity</span><div class="bar"><div class="fill" data-w="7"></div></div><span class="p mono">7%</span></div>
           <div class="rung"><span class="m">MAR-27 maturity</span><div class="bar"><div class="fill" data-w="3"></div></div><span class="p mono">3%</span></div>
         </div>
-        <p class="term-note">Weighted avg. time-to-maturity of fixed-term book: <b class="mono">96 days</b> · rolled via maker callbacks · fixed-rate share disclosed so allocators can read duration risk, not just collateral risk.</p>
+        <p class="term-note">Weighted avg. maturity of fixed book: <b class="mono">96 days</b> · overnight liquidity floor: <b class="mono">30%</b> min in open-term sleeve · largest maturity wall: <b class="mono">12% on SEP-26</b> · fixed book valued <b>mark-to-market</b> in share price · rolled via maker callbacks — the disclosures a fixed-income desk would expect, onchain.</p>
       </section>
 
       <section class="card" aria-labelledby="h-curator">
@@ -290,6 +303,9 @@
           <div class="stat"><div class="n">0</div><div class="l">Depositor loss events</div></div>
           <div class="stat"><div class="n">−0.4%</div><div class="l">Max drawdown (share px)</div></div>
         </div>
+        <h2>Skin in the game</h2>
+        <div class="guarantee"><span class="k">Curator first-loss capital</span><span class="v"><span class="pill ok">2.0% of TVL · junior</span></span></div>
+        <div class="guarantee"><span class="k">Waterfall</span><span class="v">Senior exits first — coded</span></div>
         <h2>Audit lineage</h2>
         <ul class="timeline">
           <li><b>Vaults V2 protocol</b> — Spearbit, ChainSecurity, Zellic <span class="d">· 2025</span></li>
@@ -300,6 +316,25 @@
       </section>
 
     </div>
+
+    <section class="card yield-card" aria-labelledby="h-yield">
+      <h2 id="h-yield">Yield provenance</h2>
+      <div class="yield-facts">
+        <span>Net APY <b class="mono">6.2%</b></span>
+        <span><i class="swatch" style="background:var(--blue)"></i>Native lending yield <b class="mono">4.1%</b></span>
+        <span><i class="swatch" style="background:var(--warn)"></i>Incentivized <b class="mono">2.1%</b> — market-level campaign</span>
+      </div>
+      <div class="yield-split" role="img" aria-label="Yield split: 66 percent native, 34 percent incentivized">
+        <div class="native" style="width:66%"></div>
+        <div class="incent" style="width:34%"></div>
+      </div>
+      <div class="yield-facts">
+        <span>Campaign ends <b class="mono">2026-09-30</b></span>
+        <span>Budget runway at current TVL <b class="mono">41 days</b></span>
+        <span>Organic blend <b class="mono">reconciled onchain</b> — no unexplained inflows</span>
+        <span>Distribution <b>market-level</b> — curator-neutral, flows to all vaults exposed to incentivized markets</span>
+      </div>
+    </section>
   </div>
 
   <!-- ================= API VIEW ================= -->
@@ -323,6 +358,17 @@
     { <span class="key">"market"</span>: <span class="str">"WBTC/USDC-86"</span>,    <span class="key">"pct"</span>: <span class="num">19.6</span>, <span class="key">"cap_pct"</span>: <span class="num">35</span> },
     { <span class="key">"market"</span>: <span class="str">"PT-sUSDe/USDC-915"</span>, <span class="key">"pct"</span>: <span class="num">9.7</span>, <span class="key">"cap_pct"</span>: <span class="num">15</span> }
   ],
+  <span class="key">"look_through"</span>: { <span class="key">"contracts_scanned"</span>: <span class="num">38</span>, <span class="key">"max_wrap_depth"</span>: <span class="num">3</span>, <span class="key">"flagged_dependencies"</span>: <span class="num">0</span> },
+  <span class="key">"alignment"</span>: { <span class="key">"curator_first_loss_pct_tvl"</span>: <span class="num">2.0</span>, <span class="key">"tranche"</span>: <span class="str">"junior"</span>, <span class="key">"waterfall_coded"</span>: <span class="num">true</span> },
+  <span class="key">"yield"</span>: {
+    <span class="key">"net_apy_pct"</span>: <span class="num">6.2</span>,
+    <span class="key">"native_apy_pct"</span>: <span class="num">4.1</span>,
+    <span class="key">"organic_blend_reconciled"</span>: <span class="num">true</span>,
+    <span class="key">"unexplained_inflows"</span>: <span class="num">false</span>,
+    <span class="key">"incentives"</span>: [
+      { <span class="key">"apr_pct"</span>: <span class="num">2.1</span>, <span class="key">"level"</span>: <span class="str">"market"</span>, <span class="key">"ends"</span>: <span class="str">"2026-09-30"</span>, <span class="key">"budget_runway_days"</span>: <span class="num">41</span> }
+    ]
+  },
   <span class="key">"term_exposure"</span>: {
     <span class="key">"open_term_pct"</span>: <span class="num">78</span>,
     <span class="key">"fixed_term"</span>: [
@@ -331,6 +377,9 @@
       { <span class="key">"maturity"</span>: <span class="str">"2027-03-26"</span>, <span class="key">"pct"</span>: <span class="num">3</span> }
     ],
     <span class="key">"wavg_ttm_days"</span>: <span class="num">96</span>,
+    <span class="key">"overnight_liquidity_floor_pct"</span>: <span class="num">30</span>,
+    <span class="key">"largest_maturity_wall"</span>: { <span class="key">"date"</span>: <span class="str">"2026-09-25"</span>, <span class="key">"pct"</span>: <span class="num">12</span> },
+    <span class="key">"fixed_book_valuation"</span>: <span class="str">"mark-to-market"</span>,
     <span class="key">"protocol"</span>: <span class="str">"morpho-midnight"</span>
   },
   <span class="key">"curator"</span>: { <span class="key">"aum_usd"</span>: <span class="num">2100000000</span>, <span class="key">"months_live"</span>: <span class="num">31</span>, <span class="key">"loss_events"</span>: <span class="num">0</span>, <span class="key">"max_drawdown_pct"</span>: <span class="num">-0.4</span> },
