@@ -16,7 +16,3 @@ A concept prototype exploring how Morpho Vaults could make externalized risk **l
 ## Run it
 
 Open `index.html` in a browser — no build, no dependencies.
-
----
-
-Concept & design: Gauthier Maufroy · Illustrative data only. Not affiliated with or endorsed by Morpho. Not investment advice.
